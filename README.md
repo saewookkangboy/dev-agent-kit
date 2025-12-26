@@ -56,11 +56,12 @@
 - 키워드 밀도 및 가독성 분석
 - 경쟁사 키워드 분석
 
-### 9. GEO 최적화
-- 지리적 위치 기반 최적화
-- 지역 비즈니스 스키마 생성
-- Hreflang 다국어 태그 생성
-- 지역별 키워드 및 콘텐츠 최적화
+### 9. GEO (Generative Engine Optimization) 최적화
+- 생성형 AI 검색 엔진 최적화 (ChatGPT, Claude, Perplexity, Gemini 등)
+- AI 친화적인 콘텐츠 구조 분석
+- FAQ, HowTo, Article 스키마 생성
+- 다중 AI 엔진 호환성 최적화
+- 인용 가능성 및 신뢰도 향상
 
 ### 10. AIO (All-In-One) 최적화
 - SEO, AI SEO, GEO 종합 분석
@@ -197,17 +198,23 @@ dev-agent ai-seo optimize "콘텐츠 내용" -k "키워드1" "키워드2"
 dev-agent ai-seo competitors example.com -c competitor1.com
 ```
 
-#### GEO 최적화
+#### GEO (Generative Engine Optimization) 최적화
 
 ```bash
-# 위치 분석
-dev-agent geo analyze "서울시 강남구"
+# GEO 분석 (AI 검색 엔진 최적화)
+dev-agent geo analyze https://example.com
 
-# 지역 비즈니스 스키마 생성
-dev-agent geo schema -n "비즈니스명" -p "02-1234-5678" -a "주소"
+# FAQ 스키마 생성
+dev-agent geo faq -q "질문1" "질문2"
 
-# Hreflang 태그 생성
-dev-agent geo hreflang -l ko en -u https://example.com
+# HowTo 스키마 생성
+dev-agent geo howto -n "가이드명" -s "단계1" "단계2"
+
+# Article 스키마 생성
+dev-agent geo article -h "제목" -a "작성자" -u "https://example.com"
+
+# 생성형 엔진 최적화
+dev-agent geo optimize https://example.com -e chatgpt claude perplexity
 ```
 
 #### AIO 종합 최적화

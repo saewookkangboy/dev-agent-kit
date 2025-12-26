@@ -78,47 +78,54 @@ dev-agent ai-seo competitors example.com -c competitor1.com competitor2.com
    - 도메인 권한 평가
    - 콘텐츠 점수 비교
 
-## GEO 최적화
+## GEO (Generative Engine Optimization) 최적화
 
 ### 기본 사용법
 
 ```bash
-# 위치 분석
-dev-agent geo analyze "서울시 강남구"
+# GEO 분석 (생성형 AI 검색 엔진 최적화)
+dev-agent geo analyze https://example.com
 
-# 지역 비즈니스 스키마 생성
-dev-agent geo schema -n "비즈니스명" -p "02-1234-5678" -a "서울시 강남구 테헤란로"
+# FAQ 스키마 생성
+dev-agent geo faq -q "자주 묻는 질문1" "자주 묻는 질문2"
 
-# Hreflang 태그 생성
-dev-agent geo hreflang -l ko en -u https://example.com
+# HowTo 스키마 생성
+dev-agent geo howto -n "가이드 이름" -s "단계1" "단계2" "단계3"
 
-# 지역별 최적화
-dev-agent geo optimize "서울"
+# Article 스키마 생성
+dev-agent geo article -h "기사 제목" -a "작성자명" -u "https://example.com"
+
+# 생성형 엔진 최적화
+dev-agent geo optimize https://example.com -e chatgpt claude perplexity
 ```
 
 ### 주요 기능
 
-1. **위치 분석**
-   - 좌표 정보 추출
-   - 타임존 확인
-   - 지역 키워드 추천
-   - 주변 경쟁사 분석
+1. **생성형 AI 엔진 분석**
+   - ChatGPT, Claude, Perplexity, Gemini 등 분석
+   - 엔진별 최적화 점수 계산
+   - 엔진별 특화 권장사항 제공
 
-2. **지역 비즈니스 스키마**
-   - LocalBusiness Schema 생성
-   - 주소 정보 구조화
-   - 영업시간 정보
-   - 지리 좌표 포함
+2. **콘텐츠 구조 분석**
+   - 제목 구조 (H1, H2, H3) 검증
+   - 리스트 및 표 형식 확인
+   - AI 친화적 구조 평가
 
-3. **다국어 최적화**
-   - Hreflang 태그 생성
-   - 언어별 URL 매핑
-   - 기본 언어 설정
+3. **구조화된 데이터 생성**
+   - FAQPage 스키마: 자주 묻는 질문 구조화
+   - HowTo 스키마: 단계별 가이드 제공
+   - Article 스키마: 기사 및 블로그 포스트 최적화
 
-4. **지역별 콘텐츠**
-   - 지역 키워드 최적화
-   - 지역별 랜딩 페이지 제안
-   - 지역 경쟁사 분석
+4. **AI 친화적 형식**
+   - 직접 답변 형식 제공
+   - 단계별 설명 구조
+   - 명확한 정의 및 용어 설명
+   - 불릿 포인트 활용
+
+5. **인용 및 신뢰도**
+   - 출처 및 참고문헌 명시
+   - 작성 및 업데이트 날짜 표시
+   - 신뢰할 수 있는 소스 인용
 
 ## AIO (All-In-One) 최적화
 
@@ -185,17 +192,20 @@ dev-agent ai-seo optimize "기존 콘텐츠" -k "주요키워드"
 dev-agent ai-seo competitors example.com
 ```
 
-### 3. 지역 최적화
+### 3. GEO (Generative Engine Optimization) 최적화
 
 ```bash
-# 위치 분석
-dev-agent geo analyze "서울시 강남구"
+# GEO 분석
+dev-agent geo analyze https://example.com
 
-# 지역 스키마 생성
-dev-agent geo schema -n "회사명" -p "전화번호" -a "주소"
+# FAQ 스키마 생성
+dev-agent geo faq -q "질문1" "질문2"
 
-# 다국어 설정
-dev-agent geo hreflang -l ko en ja -u https://example.com
+# HowTo 스키마 생성
+dev-agent geo howto -n "가이드" -s "단계1" "단계2"
+
+# 생성형 엔진 최적화
+dev-agent geo optimize https://example.com -e chatgpt claude
 ```
 
 ### 4. 종합 최적화
@@ -230,13 +240,15 @@ dev-agent aio report -f markdown
 - [ ] 콘텐츠 가독성 개선
 - [ ] 경쟁사 키워드 분석
 
-### GEO
-- [ ] 지역 비즈니스 등록 (Google My Business)
-- [ ] LocalBusiness Schema 추가
-- [ ] 지역 키워드 콘텐츠 작성
-- [ ] Hreflang 태그 설정
-- [ ] 지역별 랜딩 페이지 생성
-- [ ] 주소 정보 정확성 확인
+### GEO (Generative Engine Optimization)
+- [ ] FAQ 스키마 추가
+- [ ] HowTo 스키마 추가 (단계별 가이드)
+- [ ] Article 스키마 추가
+- [ ] 명확한 제목 구조 (H1, H2, H3)
+- [ ] 리스트 및 표 형식 활용
+- [ ] 직접 답변 형식 제공
+- [ ] 출처 및 인용 명시
+- [ ] 다중 AI 엔진 호환성 확인
 
 ### AIO
 - [ ] 종합 분석 실행

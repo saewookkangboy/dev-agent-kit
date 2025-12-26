@@ -202,51 +202,75 @@ aiSeoCommand
     await aiSeoModule.analyzeCompetitors(domain, options.competitors || []);
   });
 
-// GEO 명령어
+// GEO (Generative Engine Optimization) 명령어
 const geoCommand = program.command('geo');
 geoCommand
   .command('analyze')
-  .description('지리적 위치 분석')
-  .argument('<location>', '분석할 위치')
-  .action(async (location) => {
+  .description('GEO (Generative Engine Optimization) 분석')
+  .argument('<url>', '분석할 URL 또는 경로')
+  .action(async (url) => {
     const { default: geoModule } = await import('../src/modules/geo/index.js');
-    await geoModule.analyzeLocation(location);
+    await geoModule.analyzeContent(url);
   });
 
 geoCommand
-  .command('schema')
-  .description('지역 비즈니스 스키마 생성')
-  .option('-n, --name <name>', '비즈니스 이름')
-  .option('-p, --phone <phone>', '전화번호')
-  .option('-a, --address <address>', '주소')
+  .command('faq')
+  .description('FAQ 스키마 생성')
+  .option('-q, --questions <questions...>', '질문 목록')
   .action(async (options) => {
     const { default: geoModule } = await import('../src/modules/geo/index.js');
-    const businessInfo = {
-      name: options.name || '',
-      phone: options.phone || '',
-      address: options.address ? { street: options.address } : {}
+    // FAQ 데이터 구조화 필요
+    const faqs = (options.questions || []).map((q, i) => ({
+      question: q,
+      answer: `답변 ${i + 1}`
+    }));
+    await geoModule.generateFAQSchema(faqs);
+  });
+
+geoCommand
+  .command('howto')
+  .description('HowTo 스키마 생성')
+  .option('-n, --name <name>', '가이드 이름')
+  .option('-s, --steps <steps...>', '단계 목록')
+  .action(async (options) => {
+    const { default: geoModule } = await import('../src/modules/geo/index.js');
+    const howToData = {
+      name: options.name || '가이드',
+      description: '',
+      steps: (options.steps || []).map((step, i) => ({
+        name: `단계 ${i + 1}`,
+        text: step
+      }))
     };
-    await geoModule.generateLocalSchema(businessInfo);
+    await geoModule.generateHowToSchema(howToData);
   });
 
 geoCommand
-  .command('hreflang')
-  .description('Hreflang 태그 생성')
-  .option('-l, --languages <languages...>', '언어 코드 목록 (예: ko,en)')
-  .option('-u, --url <url>', '기본 URL')
+  .command('article')
+  .description('Article 스키마 생성')
+  .option('-h, --headline <headline>', '제목')
+  .option('-a, --author <author>', '작성자')
+  .option('-u, --url <url>', 'URL')
   .action(async (options) => {
     const { default: geoModule } = await import('../src/modules/geo/index.js');
-    const languages = (options.languages || ['ko', 'en']).map(code => ({ code }));
-    await geoModule.generateHreflang(languages, options.url || 'https://example.com');
+    const articleData = {
+      headline: options.headline || '',
+      description: '',
+      author: { name: options.author || '' },
+      url: options.url || '',
+      publisher: { name: '' }
+    };
+    await geoModule.generateArticleSchema(articleData);
   });
 
 geoCommand
   .command('optimize')
-  .description('지역별 최적화')
-  .argument('<region>', '최적화할 지역')
-  .action(async (region) => {
+  .description('생성형 엔진 최적화')
+  .argument('<url>', '최적화할 URL 또는 경로')
+  .option('-e, --engines <engines...>', '대상 엔진 (chatgpt, claude, perplexity, gemini)')
+  .action(async (url, options) => {
     const { default: geoModule } = await import('../src/modules/geo/index.js');
-    await geoModule.optimizeForRegion(region);
+    await geoModule.optimizeForEngines(url, options.engines || []);
   });
 
 // AIO 명령어

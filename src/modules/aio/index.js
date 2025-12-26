@@ -86,12 +86,13 @@ class AIOManager {
         analysis.scores.aiSeo = 85;
       }
 
-      // GEO 분석
+      // GEO (Generative Engine Optimization) 분석
       if (config.optimization.geo) {
-        console.log(chalk.blue('🌍 GEO 분석 중...'));
+        console.log(chalk.blue('🤖 GEO (Generative Engine Optimization) 분석 중...'));
         const { default: geoModule } = await import('../geo/index.js');
-        // GEO 분석은 별도로 실행
-        analysis.scores.geo = 80;
+        const geoAnalysis = await geoModule.analyzeContent(urlOrPath);
+        analysis.scores.geo = geoAnalysis.overallScore;
+        analysis.optimizations.geo = geoAnalysis;
       }
 
       // 성능 분석

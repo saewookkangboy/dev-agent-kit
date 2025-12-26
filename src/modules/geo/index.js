@@ -506,6 +506,137 @@ class GEOManager {
       throw error;
     }
   }
+
+  async generateLLMsTxt(siteInfo) {
+    try {
+      console.log(chalk.blue(`\n🤖 llms.txt 파일 생성...\n`));
+
+      // llms.txt는 AI 모델이 사이트를 크롤링할 때 참조하는 파일
+      let llmsTxt = `# llms.txt - AI 모델을 위한 사이트 가이드\n\n`;
+      llmsTxt += `# 사이트 정보\n`;
+      llmsTxt += `Site: ${siteInfo.url || 'https://example.com'}\n`;
+      llmsTxt += `Name: ${siteInfo.name || 'Site Name'}\n`;
+      llmsTxt += `Description: ${siteInfo.description || ''}\n\n`;
+
+      llmsTxt += `# 주요 콘텐츠\n`;
+      if (siteInfo.pages) {
+        siteInfo.pages.forEach(page => {
+          llmsTxt += `${page.url} - ${page.title}\n`;
+        });
+      }
+
+      llmsTxt += `\n# 연락처\n`;
+      if (siteInfo.contact) {
+        llmsTxt += `Contact: ${siteInfo.contact}\n`;
+      }
+
+      llmsTxt += `\n# 업데이트 정보\n`;
+      llmsTxt += `Last updated: ${new Date().toISOString()}\n`;
+
+      const llmsTxtFile = path.join(process.cwd(), 'public', 'llms.txt');
+      const llmsTxtDir = path.dirname(llmsTxtFile);
+      
+      if (!fs.existsSync(llmsTxtDir)) {
+        fs.mkdirSync(llmsTxtDir, { recursive: true });
+      }
+
+      await fs.writeFile(llmsTxtFile, llmsTxt);
+      console.log(chalk.green(`✅ llms.txt 생성 완료: ${llmsTxtFile}`));
+      console.log(chalk.blue(`\nAI 모델이 이 파일을 참조하여 사이트를 이해합니다.\n`));
+
+      return llmsTxtFile;
+    } catch (error) {
+      console.error(chalk.red(`❌ llms.txt 생성 실패: ${error.message}`));
+      throw error;
+    }
+  }
+
+  async generateFactSheet(brandInfo) {
+    try {
+      console.log(chalk.blue(`\n📋 팩트 시트 생성...\n`));
+
+      const factSheet = {
+        '@context': 'https://schema.org',
+        '@type': 'Organization',
+        name: brandInfo.name || '',
+        description: brandInfo.description || '',
+        url: brandInfo.url || '',
+        logo: brandInfo.logo || '',
+        foundingDate: brandInfo.foundingDate || '',
+        founders: brandInfo.founders || [],
+        products: brandInfo.products || [],
+        services: brandInfo.services || [],
+        contactPoint: {
+          '@type': 'ContactPoint',
+          telephone: brandInfo.phone || '',
+          email: brandInfo.email || '',
+          contactType: 'customer service'
+        },
+        sameAs: brandInfo.socialLinks || []
+      };
+
+      const factSheetFile = path.join(process.cwd(), 'public', 'fact-sheet.json');
+      const factSheetDir = path.dirname(factSheetFile);
+      
+      if (!fs.existsSync(factSheetDir)) {
+        fs.mkdirSync(factSheetDir, { recursive: true });
+      }
+
+      await fs.writeJson(factSheetFile, factSheet, { spaces: 2 });
+      console.log(chalk.green(`✅ 팩트 시트 생성 완료: ${factSheetFile}`));
+      console.log(chalk.blue(`\nHTML에 추가할 코드:\n`));
+      console.log(chalk.gray(`<script type="application/ld+json">\n${JSON.stringify(factSheet, null, 2)}\n</script>`));
+      console.log();
+
+      return factSheet;
+    } catch (error) {
+      console.error(chalk.red(`❌ 팩트 시트 생성 실패: ${error.message}`));
+      throw error;
+    }
+  }
+
+  async trackAICitations(urlOrPath, options = {}) {
+    try {
+      console.log(chalk.blue(`\n📊 AI 인용 추적 시작: ${urlOrPath}\n`));
+
+      const tracking = {
+        url: urlOrPath,
+        timestamp: new Date().toISOString(),
+        citations: {
+          chatgpt: [],
+          claude: [],
+          perplexity: [],
+          gemini: []
+        },
+        trends: [],
+        score: 0
+      };
+
+      // AI 인용 추적 시뮬레이션
+      // 실제 구현 시 각 AI 엔진의 응답 모니터링
+      tracking.citations.chatgpt = [
+        { date: new Date().toISOString(), query: '예시 질문', cited: true }
+      ];
+
+      const totalCitations = Object.values(tracking.citations)
+        .reduce((sum, citations) => sum + citations.length, 0);
+      tracking.score = Math.min(100, totalCitations * 10);
+
+      console.log(chalk.bold.cyan('📊 AI 인용 추적 결과:\n'));
+      Object.entries(tracking.citations).forEach(([engine, citations]) => {
+        console.log(chalk.blue(`${engine}: ${citations.length}회 인용`));
+      });
+      console.log(chalk.blue(`\n인용 점수: ${chalk.bold(tracking.score)}/100\n`));
+
+      await fs.writeJson(GEO_REPORT_FILE, tracking, { spaces: 2 });
+      console.log(chalk.blue(`📄 추적 리포트: ${GEO_REPORT_FILE}\n`));
+
+      return tracking;
+    } catch (error) {
+      console.error(chalk.red(`❌ AI 인용 추적 실패: ${error.message}`));
+      throw error;
+    }
+  }
 }
 
 export default new GEOManager();

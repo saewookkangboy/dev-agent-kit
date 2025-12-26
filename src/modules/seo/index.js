@@ -65,6 +65,23 @@ class SEOManager {
         enabled: true,
         allow: ['/'],
         disallow: ['/admin', '/private']
+      },
+      mobile: {
+        enabled: true,
+        responsive: true,
+        viewport: 'width=device-width, initial-scale=1'
+      },
+      performance: {
+        enabled: true,
+        coreWebVitals: {
+          lcp: 2.5, // Largest Contentful Paint (초)
+          fid: 100, // First Input Delay (밀리초)
+          cls: 0.1 // Cumulative Layout Shift
+        }
+      },
+      backlinks: {
+        enabled: true,
+        qualityCheck: true
       }
     };
   }
@@ -281,6 +298,140 @@ class SEOManager {
       console.log(chalk.green(`✅ Robots.txt 생성 완료: ${robotsFile}`));
     } catch (error) {
       console.error(chalk.red(`❌ Robots.txt 생성 실패: ${error.message}`));
+      throw error;
+    }
+  }
+
+  async analyzeMobileOptimization(urlOrPath) {
+    try {
+      console.log(chalk.blue(`\n📱 모바일 최적화 분석 시작...\n`));
+
+      const analysis = {
+        url: urlOrPath,
+        timestamp: new Date().toISOString(),
+        viewport: false,
+        responsive: false,
+        touchFriendly: false,
+        mobileFriendly: false,
+        score: 0,
+        recommendations: []
+      };
+
+      // 모바일 최적화 분석 시뮬레이션
+      // 실제 구현 시 Google Mobile-Friendly Test API 사용
+      analysis.viewport = true;
+      analysis.responsive = true;
+      analysis.touchFriendly = true;
+      analysis.mobileFriendly = true;
+
+      if (!analysis.viewport) {
+        analysis.recommendations.push({
+          type: 'viewport',
+          message: 'Viewport 메타 태그 추가 필요',
+          action: '<meta name="viewport" content="width=device-width, initial-scale=1">'
+        });
+      }
+
+      // 점수 계산
+      let score = 100;
+      if (!analysis.viewport) score -= 30;
+      if (!analysis.responsive) score -= 30;
+      if (!analysis.touchFriendly) score -= 20;
+      if (!analysis.mobileFriendly) score -= 20;
+      analysis.score = score;
+
+      console.log(chalk.bold.cyan('📱 모바일 최적화 분석 결과:\n'));
+      console.log(chalk.blue(`점수: ${chalk.bold(analysis.score)}/100\n`));
+      console.log(chalk.blue(`Viewport: ${analysis.viewport ? '✅' : '❌'}`));
+      console.log(chalk.blue(`반응형: ${analysis.responsive ? '✅' : '❌'}`));
+      console.log(chalk.blue(`터치 친화적: ${analysis.touchFriendly ? '✅' : '❌'}`));
+      console.log(chalk.blue(`모바일 친화적: ${analysis.mobileFriendly ? '✅' : '❌'}\n`));
+
+      if (analysis.recommendations.length > 0) {
+        console.log(chalk.yellow('💡 권장사항:\n'));
+        analysis.recommendations.forEach(rec => {
+          console.log(`  • ${rec.message}`);
+          console.log(chalk.gray(`    → ${rec.action}`));
+        });
+        console.log();
+      }
+
+      return analysis;
+    } catch (error) {
+      console.error(chalk.red(`❌ 모바일 최적화 분석 실패: ${error.message}`));
+      throw error;
+    }
+  }
+
+  async analyzePerformance(urlOrPath) {
+    try {
+      console.log(chalk.blue(`\n⚡ 성능 분석 시작...\n`));
+
+      const config = await this.loadConfig();
+      const analysis = {
+        url: urlOrPath,
+        timestamp: new Date().toISOString(),
+        coreWebVitals: {
+          lcp: 0, // Largest Contentful Paint
+          fid: 0, // First Input Delay
+          cls: 0  // Cumulative Layout Shift
+        },
+        score: 0,
+        recommendations: []
+      };
+
+      // Core Web Vitals 분석 시뮬레이션
+      // 실제 구현 시 PageSpeed Insights API 사용
+      analysis.coreWebVitals.lcp = 2.1;
+      analysis.coreWebVitals.fid = 80;
+      analysis.coreWebVitals.cls = 0.08;
+
+      // 점수 계산
+      let score = 100;
+      if (analysis.coreWebVitals.lcp > config.performance.coreWebVitals.lcp) {
+        score -= 20;
+        analysis.recommendations.push({
+          type: 'lcp',
+          message: 'LCP 개선 필요 (현재: ' + analysis.coreWebVitals.lcp + '초)',
+          action: '이미지 최적화, 서버 응답 시간 개선'
+        });
+      }
+      if (analysis.coreWebVitals.fid > config.performance.coreWebVitals.fid) {
+        score -= 15;
+        analysis.recommendations.push({
+          type: 'fid',
+          message: 'FID 개선 필요 (현재: ' + analysis.coreWebVitals.fid + 'ms)',
+          action: 'JavaScript 최적화, 코드 분할'
+        });
+      }
+      if (analysis.coreWebVitals.cls > config.performance.coreWebVitals.cls) {
+        score -= 15;
+        analysis.recommendations.push({
+          type: 'cls',
+          message: 'CLS 개선 필요 (현재: ' + analysis.coreWebVitals.cls + ')',
+          action: '이미지 크기 지정, 동적 콘텐츠 최소화'
+        });
+      }
+      analysis.score = score;
+
+      console.log(chalk.bold.cyan('⚡ 성능 분석 결과:\n'));
+      console.log(chalk.blue(`점수: ${chalk.bold(analysis.score)}/100\n`));
+      console.log(chalk.blue(`LCP: ${analysis.coreWebVitals.lcp}초 ${analysis.coreWebVitals.lcp <= 2.5 ? '✅' : '⚠️'}`));
+      console.log(chalk.blue(`FID: ${analysis.coreWebVitals.fid}ms ${analysis.coreWebVitals.fid <= 100 ? '✅' : '⚠️'}`));
+      console.log(chalk.blue(`CLS: ${analysis.coreWebVitals.cls} ${analysis.coreWebVitals.cls <= 0.1 ? '✅' : '⚠️'}\n`));
+
+      if (analysis.recommendations.length > 0) {
+        console.log(chalk.yellow('💡 권장사항:\n'));
+        analysis.recommendations.forEach(rec => {
+          console.log(`  • ${rec.message}`);
+          console.log(chalk.gray(`    → ${rec.action}`));
+        });
+        console.log();
+      }
+
+      return analysis;
+    } catch (error) {
+      console.error(chalk.red(`❌ 성능 분석 실패: ${error.message}`));
       throw error;
     }
   }

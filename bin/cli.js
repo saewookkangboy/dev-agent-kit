@@ -171,6 +171,24 @@ seoCommand
     await seoModule.generateRobotsTxt();
   });
 
+seoCommand
+  .command('mobile')
+  .description('모바일 최적화 분석')
+  .argument('<url>', '분석할 URL')
+  .action(async (url) => {
+    const { default: seoModule } = await import('../src/modules/seo/index.js');
+    await seoModule.analyzeMobileOptimization(url);
+  });
+
+seoCommand
+  .command('performance')
+  .description('성능 분석 (Core Web Vitals)')
+  .argument('<url>', '분석할 URL')
+  .action(async (url) => {
+    const { default: seoModule } = await import('../src/modules/seo/index.js');
+    await seoModule.analyzePerformance(url);
+  });
+
 // AI SEO 명령어
 const aiSeoCommand = program.command('ai-seo');
 aiSeoCommand
@@ -200,6 +218,29 @@ aiSeoCommand
   .action(async (domain, options) => {
     const { default: aiSeoModule } = await import('../src/modules/ai-seo/index.js');
     await aiSeoModule.analyzeCompetitors(domain, options.competitors || []);
+  });
+
+aiSeoCommand
+  .command('citations')
+  .description('AI 인용 모니터링')
+  .argument('<url>', '모니터링할 URL')
+  .action(async (url) => {
+    const { default: aiSeoModule } = await import('../src/modules/ai-seo/index.js');
+    await aiSeoModule.monitorAICitations(url);
+  });
+
+aiSeoCommand
+  .command('multimodal')
+  .description('멀티모달 콘텐츠 최적화')
+  .option('-i, --images <images...>', '이미지 URL 목록')
+  .option('-v, --videos <videos...>', '비디오 URL 목록')
+  .action(async (options) => {
+    const { default: aiSeoModule } = await import('../src/modules/ai-seo/index.js');
+    const contentData = {
+      images: (options.images || []).map(url => ({ url })),
+      videos: (options.videos || []).map(url => ({ url }))
+    };
+    await aiSeoModule.optimizeMultimodalContent(contentData);
   });
 
 // GEO (Generative Engine Optimization) 명령어
@@ -273,6 +314,47 @@ geoCommand
     await geoModule.optimizeForEngines(url, options.engines || []);
   });
 
+geoCommand
+  .command('llms-txt')
+  .description('llms.txt 파일 생성 (AI 모델 크롤링용)')
+  .option('-u, --url <url>', '사이트 URL')
+  .option('-n, --name <name>', '사이트 이름')
+  .option('-d, --description <description>', '사이트 설명')
+  .action(async (options) => {
+    const { default: geoModule } = await import('../src/modules/geo/index.js');
+    const siteInfo = {
+      url: options.url || 'https://example.com',
+      name: options.name || 'Site Name',
+      description: options.description || ''
+    };
+    await geoModule.generateLLMsTxt(siteInfo);
+  });
+
+geoCommand
+  .command('fact-sheet')
+  .description('팩트 시트 생성 (브랜드 정보)')
+  .option('-n, --name <name>', '브랜드 이름')
+  .option('-d, --description <description>', '설명')
+  .option('-u, --url <url>', 'URL')
+  .action(async (options) => {
+    const { default: geoModule } = await import('../src/modules/geo/index.js');
+    const brandInfo = {
+      name: options.name || '',
+      description: options.description || '',
+      url: options.url || ''
+    };
+    await geoModule.generateFactSheet(brandInfo);
+  });
+
+geoCommand
+  .command('track-citations')
+  .description('AI 인용 추적')
+  .argument('<url>', '추적할 URL')
+  .action(async (url) => {
+    const { default: geoModule } = await import('../src/modules/geo/index.js');
+    await geoModule.trackAICitations(url);
+  });
+
 // AIO 명령어
 const aioCommand = program.command('aio');
 aioCommand
@@ -300,6 +382,35 @@ aioCommand
   .action(async (options) => {
     const { default: aioModule } = await import('../src/modules/aio/index.js');
     await aioModule.generateReport(options.format);
+  });
+
+aioCommand
+  .command('feedback-loop')
+  .description('AI 피드백 루프 구축')
+  .argument('<url>', 'URL')
+  .option('-f, --frequency <frequency>', '모니터링 주기 (daily, weekly, monthly)', 'daily')
+  .option('-e, --engines <engines...>', '대상 엔진')
+  .action(async (url, options) => {
+    const { default: aioModule } = await import('../src/modules/aio/index.js');
+    await aioModule.setupAIFeedbackLoop(url, options);
+  });
+
+aioCommand
+  .command('visibility')
+  .description('AI 가시성 모니터링')
+  .argument('<url>', '모니터링할 URL')
+  .action(async (url) => {
+    const { default: aioModule } = await import('../src/modules/aio/index.js');
+    await aioModule.monitorAIVisibility(url);
+  });
+
+aioCommand
+  .command('aeo')
+  .description('AEO (Answer Engine Optimization) 최적화')
+  .argument('<url>', '최적화할 URL')
+  .action(async (url) => {
+    const { default: aioModule } = await import('../src/modules/aio/index.js');
+    await aioModule.optimizeAEO(url);
   });
 
 // Init 명령어

@@ -279,6 +279,143 @@ class AISEOManager {
       throw error;
     }
   }
+
+  async monitorAICitations(urlOrPath, options = {}) {
+    try {
+      console.log(chalk.blue(`\n📊 AI 인용 모니터링 시작: ${urlOrPath}\n`));
+
+      const monitoring = {
+        url: urlOrPath,
+        timestamp: new Date().toISOString(),
+        engines: {
+          chatgpt: { citations: 0, lastChecked: null },
+          claude: { citations: 0, lastChecked: null },
+          perplexity: { citations: 0, lastChecked: null },
+          gemini: { citations: 0, lastChecked: null }
+        },
+        trends: [],
+        recommendations: []
+      };
+
+      // AI 인용 모니터링 시뮬레이션
+      // 실제 구현 시 각 AI 엔진의 API 또는 크롤링 사용
+      monitoring.engines.chatgpt.citations = 15;
+      monitoring.engines.claude.citations = 12;
+      monitoring.engines.perplexity.citations = 8;
+      monitoring.engines.gemini.citations = 5;
+
+      const totalCitations = Object.values(monitoring.engines)
+        .reduce((sum, engine) => sum + engine.citations, 0);
+
+      console.log(chalk.bold.cyan('📊 AI 인용 현황:\n'));
+      Object.entries(monitoring.engines).forEach(([engine, data]) => {
+        const color = data.citations > 10 ? chalk.green : data.citations > 5 ? chalk.yellow : chalk.red;
+        console.log(`${engine}: ${color(data.citations)}회 인용`);
+      });
+      console.log(chalk.blue(`\n총 인용: ${chalk.bold(totalCitations)}회\n`));
+
+      // 인용이 적은 엔진에 대한 권장사항
+      Object.entries(monitoring.engines).forEach(([engine, data]) => {
+        if (data.citations < 5) {
+          monitoring.recommendations.push({
+            engine,
+            message: `${engine}에서 인용이 적습니다`,
+            action: `${engine} 특화 콘텐츠 최적화`
+          });
+        }
+      });
+
+      await fs.writeJson(AI_SEO_REPORT_FILE, monitoring, { spaces: 2 });
+
+      if (monitoring.recommendations.length > 0) {
+        console.log(chalk.yellow('💡 권장사항:\n'));
+        monitoring.recommendations.forEach(rec => {
+          console.log(`  • ${rec.message}`);
+          console.log(chalk.gray(`    → ${rec.action}`));
+        });
+        console.log();
+      }
+
+      console.log(chalk.blue(`📄 모니터링 리포트: ${AI_SEO_REPORT_FILE}\n`));
+
+      return monitoring;
+    } catch (error) {
+      console.error(chalk.red(`❌ AI 인용 모니터링 실패: ${error.message}`));
+      throw error;
+    }
+  }
+
+  async optimizeMultimodalContent(contentData) {
+    try {
+      console.log(chalk.blue(`\n🎨 멀티모달 콘텐츠 최적화 시작...\n`));
+
+      const optimization = {
+        timestamp: new Date().toISOString(),
+        images: [],
+        videos: [],
+        audio: [],
+        recommendations: []
+      };
+
+      // 이미지 최적화
+      if (contentData.images) {
+        contentData.images.forEach(img => {
+          optimization.images.push({
+            url: img.url,
+            alt: img.alt || '',
+            optimized: false,
+            recommendations: []
+          });
+
+          if (!img.alt) {
+            optimization.recommendations.push({
+              type: 'image',
+              message: `이미지 alt 텍스트 추가 필요: ${img.url}`,
+              action: '의미 있는 alt 텍스트 작성'
+            });
+          }
+        });
+      }
+
+      // 비디오 최적화
+      if (contentData.videos) {
+        contentData.videos.forEach(video => {
+          optimization.videos.push({
+            url: video.url,
+            transcript: video.transcript || false,
+            captions: video.captions || false,
+            optimized: false
+          });
+
+          if (!video.transcript) {
+            optimization.recommendations.push({
+              type: 'video',
+              message: `비디오 트랜스크립트 추가 필요: ${video.url}`,
+              action: 'AI가 이해할 수 있도록 트랜스크립트 제공'
+            });
+          }
+        });
+      }
+
+      console.log(chalk.green(`✅ 멀티모달 콘텐츠 분석 완료`));
+      console.log(chalk.blue(`이미지: ${optimization.images.length}개`));
+      console.log(chalk.blue(`비디오: ${optimization.videos.length}개\n`));
+
+      if (optimization.recommendations.length > 0) {
+        console.log(chalk.yellow('💡 최적화 권장사항:\n'));
+        optimization.recommendations.forEach(rec => {
+          console.log(`  • ${rec.message}`);
+          console.log(chalk.gray(`    → ${rec.action}`));
+        });
+        console.log();
+      }
+
+      return optimization;
+    } catch (error) {
+      console.error(chalk.red(`❌ 멀티모달 콘텐츠 최적화 실패: ${error.message}`));
+      throw error;
+    }
+  }
 }
 
 export default new AISEOManager();

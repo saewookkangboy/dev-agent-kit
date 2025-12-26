@@ -1,0 +1,43 @@
+{
+  "name": "dev-agent-kit",
+  "version": "1.0.0",
+  "description": "통합 개발 에이전트 패키지 - Spec-kit, To-do, Agent Roles, AI 강화학습, Claude Skills 통합",
+  "main": "src/index.js",
+  "type": "module",
+  "bin": {
+    "dev-agent": "./bin/cli.js"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "setup": "node scripts/setup.js",
+    "init": "node scripts/init-project.js"
+  },
+  "keywords": [
+    "ai",
+    "agent",
+    "development",
+    "spec-kit",
+    "claude-skills",
+    "reinforcement-learning",
+    "project-management"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^11.1.0",
+    "inquirer": "^9.2.12",
+    "chalk": "^5.3.0",
+    "fs-extra": "^11.2.0",
+    "yaml": "^2.3.4",
+    "glob": "^10.3.10",
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
+

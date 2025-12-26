@@ -2,6 +2,12 @@
 
 통합 개발 에이전트 패키지 - Spec-kit, To-do 관리, Agent Roles, AI 강화학습, Claude Skills를 통합한 종합 개발 도구
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)](https://nodejs.org/)
+
+> **오픈소스 프로젝트**: 이 프로젝트는 누구나 자유롭게 사용, 수정 및 배포할 수 있는 오픈소스 프로젝트입니다.  
+> **Open Source Project**: This is an open-source project that anyone can use, modify, and distribute freely.
+
 ## 주요 기능
 
 ### 1. Spec-kit 통합
@@ -40,10 +46,29 @@
 
 ## 설치
 
+### 기본 설치
+
 ```bash
+# 저장소 클론
+git clone https://github.com/saewookkangboy/dev-agent-kit.git
+cd dev-agent-kit
+
+# 의존성 설치
 npm install
+
+# 설정
 npm run setup
 ```
+
+### 전역 설치 (선택사항)
+
+```bash
+npm link
+# 또는
+npm install -g .
+```
+
+설치 후 `dev-agent` 명령어를 어디서나 사용할 수 있습니다.
 
 ## 사용 방법
 
@@ -57,26 +82,76 @@ dev-agent init
 
 ### CLI 사용
 
-```bash
-# To-do 리스트 관리
-dev-agent todo add "작업 내용"
-dev-agent todo list
-dev-agent todo complete <id>
+#### To-do 리스트 관리
 
-# Agent Role 설정
+```bash
+# To-do 추가 (우선순위 및 마일스톤 지정 가능)
+dev-agent todo add "작업 내용" -p high -m "Phase 1"
+dev-agent todo add "API 연동" -p medium
+
+# To-do 목록 조회
+dev-agent todo list
+dev-agent todo list -s pending  # 상태별 필터링
+
+# To-do 완료 처리
+dev-agent todo complete <id>
+```
+
+#### Agent Role 설정
+
+```bash
+# 역할 설정
 dev-agent role set --role frontend
+dev-agent role set --role backend
+dev-agent role set --role pm
+
+# 사용 가능한 역할 목록
 dev-agent role list
 
-# Spec-kit 관리
-dev-agent spec create "사양명"
+# 현재 역할 정보 조회
+dev-agent role info
+```
+
+#### Spec-kit 관리
+
+```bash
+# 사양 문서 생성
+dev-agent spec create "사용자 인증 시스템"
+dev-agent spec create "API 설계"
+
+# 사양 문서 목록 조회
+dev-agent spec list
+
+# 사양 문서 검증
 dev-agent spec validate
+```
 
-# AI 강화학습 시작
-dev-agent train --agent <agent-name>
+#### AI 강화학습
 
-# Claude Skills 관리
-dev-agent skills list
-dev-agent skills activate <skill-name>
+```bash
+# 강화학습 시작
+dev-agent train --agent my-agent --episodes 100
+```
+
+#### Skills 관리
+
+```bash
+# Claude Skills 목록 조회
+dev-agent skills list --type claude
+
+# Agent Skills 목록 조회
+dev-agent skills list --type agent
+
+# Skill 활성화
+dev-agent skills activate spec-kit --type claude
+dev-agent skills activate web-search --type agent
+```
+
+#### 프로젝트 초기화
+
+```bash
+# 새 프로젝트 초기화
+dev-agent init
 ```
 
 ## 프로젝트 구조
@@ -97,18 +172,119 @@ dev-agent-kit/
 ├── bin/
 │   └── cli.js                # CLI 진입점
 ├── scripts/                  # 스크립트
-├── templates/                # 템플릿 파일
-└── docs/                     # 문서
+│   ├── init-project.js       # 프로젝트 초기화
+│   └── setup.js              # 설정 스크립트
+├── docs/                     # 문서
+│   ├── USAGE.md              # 사용 가이드
+│   ├── ARCHITECTURE.md       # 아키텍처 문서
+│   ├── RECOMMENDED_PACKAGES.md # 추천 패키지
+│   └── INTEGRATION_GUIDE.md  # 통합 가이드
+├── .spec-kit/                # Spec-kit 문서 저장소
+├── .project-data/            # 프로젝트 데이터
+│   ├── todos.json            # To-do 데이터
+│   ├── role-config.json      # Role 설정
+│   └── config.json           # 프로젝트 설정
+├── .env.example              # 환경 변수 예시
+├── .eslintrc.json            # ESLint 설정
+├── .prettierrc.json          # Prettier 설정
+├── vitest.config.js          # Vitest 설정
+└── package.json.recommended  # 확장 패키지 예시
 ```
+
+## 확장 및 통합
+
+### 추천 패키지
+
+프로젝트에 추가하면 유용한 패키지들을 추천합니다:
+
+- **코드 품질**: ESLint, Prettier, SonarJS
+- **테스트**: Vitest, Playwright, Cypress
+- **문서화**: TypeDoc, JSDoc
+- **의존성 관리**: npm-check-updates, Snyk
+- **CI/CD**: GitHub Actions, Husky
+- **로깅**: Winston, Debug
+- **보안**: Snyk, audit-ci
+
+자세한 내용은 [추천 패키지 문서](docs/RECOMMENDED_PACKAGES.md)를 참고하세요.
+
+### 통합 가이드
+
+다른 도구들과 통합하는 방법은 [통합 가이드](docs/INTEGRATION_GUIDE.md)를 참고하세요.
+
+## 문서
+
+- [사용 가이드](docs/USAGE.md) - 상세한 사용 방법
+- [아키텍처 문서](docs/ARCHITECTURE.md) - 시스템 구조 및 설계
+- [추천 패키지](docs/RECOMMENDED_PACKAGES.md) - 추가 패키지 추천
+- [통합 가이드](docs/INTEGRATION_GUIDE.md) - 도구 통합 방법
+- [기여 가이드](CONTRIBUTING.md) - 프로젝트 기여 방법
+
+## 개발 워크플로우 예시
+
+```bash
+# 1. 프로젝트 초기화
+dev-agent init
+
+# 2. 역할 설정
+dev-agent role set --role frontend
+
+# 3. 초기 사양 문서 생성
+dev-agent spec create "프로젝트 개요"
+
+# 4. 작업 추가
+dev-agent todo add "컴포넌트 설계" -p high -m "Phase 1"
+dev-agent todo add "API 연동" -p medium -m "Phase 1"
+
+# 5. Skills 활성화
+dev-agent skills activate code-reviewer --type claude
+dev-agent skills activate git-operations --type agent
+
+# 6. 진행 상황 확인
+dev-agent todo list
+dev-agent spec list
+```
+
+## 기여하기
+
+프로젝트에 기여하고 싶으시다면 [기여 가이드](CONTRIBUTING.md)를 참고해주세요.
+
+버그 리포트, 기능 제안, Pull Request를 환영합니다!
 
 ## 라이선스
 
-MIT
+MIT License
+
+Copyright (c) 2025 Park chunghyo
+
+이 프로젝트는 누구나 자유롭게 사용, 수정 및 배포할 수 있는 오픈소스 프로젝트입니다.  
+This is an open-source project that anyone can use, modify, and distribute freely.
+
+자세한 내용은 [LICENSE](LICENSE) 파일을 참고하세요.
 
 ## 참고 리소스
 
-- [Spec-kit](https://github.com/github/spec-kit)
-- [Agent Lightning](https://github.com/microsoft/agent-lightning)
-- [Awesome Claude Skills](https://github.com/ComposioHQ/awesome-claude-skills)
-- [Agent Skills](https://github.com/agentskills/agentskills)
+### 핵심 통합 리소스
+
+- [Spec-kit](https://github.com/github/spec-kit) - 사양 문서 관리
+- [Agent Lightning](https://github.com/microsoft/agent-lightning) - AI 강화학습
+- [Awesome Claude Skills](https://github.com/ComposioHQ/awesome-claude-skills) - Claude Skills
+- [Agent Skills](https://github.com/agentskills/agentskills) - Agent Skills 프레임워크
+
+### 관련 도구
+
+- [ESLint](https://eslint.org/) - 코드 린팅
+- [Prettier](https://prettier.io/) - 코드 포맷팅
+- [Vitest](https://vitest.dev/) - 테스트 프레임워크
+- [Husky](https://typicode.github.io/husky/) - Git 훅
+- [standard-version](https://github.com/conventional-changelog/standard-version) - 버전 관리
+
+## 작성자
+
+**Park chunghyo**
+
+- GitHub: [@saewookkangboy](https://github.com/saewookkangboy)
+
+## 스타
+
+이 프로젝트가 도움이 되셨다면 ⭐를 눌러주세요!
 

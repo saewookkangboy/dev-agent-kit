@@ -1,0 +1,81 @@
+{
+  "name": "dev-agent-kit",
+  "version": "1.0.0",
+  "description": "통합 개발 에이전트 패키지 - Spec-kit, To-do, Agent Roles, AI 강화학습, Claude Skills 통합",
+  "main": "src/index.js",
+  "type": "module",
+  "bin": {
+    "dev-agent": "./bin/cli.js"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "vitest",
+    "test:coverage": "vitest --coverage",
+    "test:ui": "vitest --ui",
+    "setup": "node scripts/setup.js",
+    "init": "node scripts/init-project.js",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "deps:check": "ncu",
+    "deps:update": "ncu -u",
+    "security:audit": "npm audit",
+    "security:snyk": "snyk test || true",
+    "docs:generate": "typedoc",
+    "version:release": "standard-version",
+    "quality:check": "npm run lint && npm run test && npm run security:audit",
+    "prepare": "husky install || true"
+  },
+  "keywords": [
+    "ai",
+    "agent",
+    "development",
+    "spec-kit",
+    "claude-skills",
+    "reinforcement-learning",
+    "project-management"
+  ],
+  "author": "Park chunghyo",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^11.1.0",
+    "inquirer": "^9.2.12",
+    "chalk": "^5.3.0",
+    "fs-extra": "^11.2.0",
+    "yaml": "^2.3.4",
+    "glob": "^10.3.10",
+    "node-fetch": "^3.3.2",
+    "dotenv": "^16.4.5",
+    "winston": "^3.11.0",
+    "debug": "^4.3.5"
+  },
+  "devDependencies": {
+    "vitest": "^1.2.0",
+    "@vitest/ui": "^1.2.0",
+    "@vitest/coverage-v8": "^1.2.0",
+    "eslint": "^8.57.0",
+    "prettier": "^3.2.5",
+    "eslint-config-prettier": "^9.1.0",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.0",
+    "npm-check-updates": "^16.14.19",
+    "standard-version": "^9.5.0",
+    "typedoc": "^0.25.4",
+    "snyk": "^1.1294.0",
+    "@types/node": "^20.11.5"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yaml,yml}": [
+      "prettier --write"
+    ]
+  }
+}
+

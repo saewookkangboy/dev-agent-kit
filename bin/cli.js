@@ -143,6 +143,141 @@ skillsCommand
     }
   });
 
+// SEO 명령어
+const seoCommand = program.command('seo');
+seoCommand
+  .command('analyze')
+  .description('SEO 분석')
+  .argument('<url>', '분석할 URL 또는 경로')
+  .action(async (url) => {
+    const { default: seoModule } = await import('../src/modules/seo/index.js');
+    await seoModule.analyze(url);
+  });
+
+seoCommand
+  .command('sitemap')
+  .description('Sitemap 생성')
+  .option('-u, --urls <urls...>', 'URL 목록')
+  .action(async (options) => {
+    const { default: seoModule } = await import('../src/modules/seo/index.js');
+    await seoModule.generateSitemap(options.urls || []);
+  });
+
+seoCommand
+  .command('robots')
+  .description('Robots.txt 생성')
+  .action(async () => {
+    const { default: seoModule } = await import('../src/modules/seo/index.js');
+    await seoModule.generateRobotsTxt();
+  });
+
+// AI SEO 명령어
+const aiSeoCommand = program.command('ai-seo');
+aiSeoCommand
+  .command('keywords')
+  .description('AI 기반 키워드 리서치')
+  .argument('<topic>', '주제')
+  .action(async (topic) => {
+    const { default: aiSeoModule } = await import('../src/modules/ai-seo/index.js');
+    await aiSeoModule.researchKeywords(topic);
+  });
+
+aiSeoCommand
+  .command('optimize')
+  .description('AI 기반 콘텐츠 최적화')
+  .argument('<content>', '최적화할 콘텐츠')
+  .option('-k, --keywords <keywords...>', '타겟 키워드')
+  .action(async (content, options) => {
+    const { default: aiSeoModule } = await import('../src/modules/ai-seo/index.js');
+    await aiSeoModule.optimizeContent(content, options.keywords || []);
+  });
+
+aiSeoCommand
+  .command('competitors')
+  .description('경쟁사 분석')
+  .argument('<domain>', '도메인')
+  .option('-c, --competitors <competitors...>', '경쟁사 도메인 목록')
+  .action(async (domain, options) => {
+    const { default: aiSeoModule } = await import('../src/modules/ai-seo/index.js');
+    await aiSeoModule.analyzeCompetitors(domain, options.competitors || []);
+  });
+
+// GEO 명령어
+const geoCommand = program.command('geo');
+geoCommand
+  .command('analyze')
+  .description('지리적 위치 분석')
+  .argument('<location>', '분석할 위치')
+  .action(async (location) => {
+    const { default: geoModule } = await import('../src/modules/geo/index.js');
+    await geoModule.analyzeLocation(location);
+  });
+
+geoCommand
+  .command('schema')
+  .description('지역 비즈니스 스키마 생성')
+  .option('-n, --name <name>', '비즈니스 이름')
+  .option('-p, --phone <phone>', '전화번호')
+  .option('-a, --address <address>', '주소')
+  .action(async (options) => {
+    const { default: geoModule } = await import('../src/modules/geo/index.js');
+    const businessInfo = {
+      name: options.name || '',
+      phone: options.phone || '',
+      address: options.address ? { street: options.address } : {}
+    };
+    await geoModule.generateLocalSchema(businessInfo);
+  });
+
+geoCommand
+  .command('hreflang')
+  .description('Hreflang 태그 생성')
+  .option('-l, --languages <languages...>', '언어 코드 목록 (예: ko,en)')
+  .option('-u, --url <url>', '기본 URL')
+  .action(async (options) => {
+    const { default: geoModule } = await import('../src/modules/geo/index.js');
+    const languages = (options.languages || ['ko', 'en']).map(code => ({ code }));
+    await geoModule.generateHreflang(languages, options.url || 'https://example.com');
+  });
+
+geoCommand
+  .command('optimize')
+  .description('지역별 최적화')
+  .argument('<region>', '최적화할 지역')
+  .action(async (region) => {
+    const { default: geoModule } = await import('../src/modules/geo/index.js');
+    await geoModule.optimizeForRegion(region);
+  });
+
+// AIO 명령어
+const aioCommand = program.command('aio');
+aioCommand
+  .command('analyze')
+  .description('AIO 종합 분석')
+  .argument('<url>', '분석할 URL 또는 경로')
+  .action(async (url) => {
+    const { default: aioModule } = await import('../src/modules/aio/index.js');
+    await aioModule.comprehensiveAnalysis(url);
+  });
+
+aioCommand
+  .command('optimize')
+  .description('AIO 자동 최적화')
+  .argument('<url>', '최적화할 URL 또는 경로')
+  .action(async (url) => {
+    const { default: aioModule } = await import('../src/modules/aio/index.js');
+    await aioModule.autoOptimize(url);
+  });
+
+aioCommand
+  .command('report')
+  .description('AIO 리포트 생성')
+  .option('-f, --format <format>', '리포트 형식 (json, markdown)', 'json')
+  .action(async (options) => {
+    const { default: aioModule } = await import('../src/modules/aio/index.js');
+    await aioModule.generateReport(options.format);
+  });
+
 // Init 명령어
 program
   .command('init')

@@ -44,6 +44,30 @@
 - agentskills 프레임워크 통합
 - 에이전트 스킬 관리 및 확장
 
+### 7. SEO 최적화
+- 검색 엔진 최적화 분석
+- 메타 태그 및 키워드 분석
+- Sitemap 및 Robots.txt 생성
+- 구조화된 데이터 검증
+
+### 8. AI SEO 최적화
+- AI 기반 키워드 리서치
+- 콘텐츠 자동 최적화
+- 키워드 밀도 및 가독성 분석
+- 경쟁사 키워드 분석
+
+### 9. GEO 최적화
+- 지리적 위치 기반 최적화
+- 지역 비즈니스 스키마 생성
+- Hreflang 다국어 태그 생성
+- 지역별 키워드 및 콘텐츠 최적화
+
+### 10. AIO (All-In-One) 최적화
+- SEO, AI SEO, GEO 종합 분석
+- 성능, 접근성, 보안 분석
+- 소셜 미디어 최적화
+- 자동 최적화 및 리포트 생성
+
 ## 설치
 
 ### 기본 설치
@@ -147,6 +171,58 @@ dev-agent skills activate spec-kit --type claude
 dev-agent skills activate web-search --type agent
 ```
 
+#### SEO 최적화
+
+```bash
+# SEO 분석
+dev-agent seo analyze https://example.com
+
+# Sitemap 생성
+dev-agent seo sitemap -u https://example.com https://example.com/about
+
+# Robots.txt 생성
+dev-agent seo robots
+```
+
+#### AI SEO 최적화
+
+```bash
+# AI 키워드 리서치
+dev-agent ai-seo keywords "웹 개발"
+
+# 콘텐츠 최적화
+dev-agent ai-seo optimize "콘텐츠 내용" -k "키워드1" "키워드2"
+
+# 경쟁사 분석
+dev-agent ai-seo competitors example.com -c competitor1.com
+```
+
+#### GEO 최적화
+
+```bash
+# 위치 분석
+dev-agent geo analyze "서울시 강남구"
+
+# 지역 비즈니스 스키마 생성
+dev-agent geo schema -n "비즈니스명" -p "02-1234-5678" -a "주소"
+
+# Hreflang 태그 생성
+dev-agent geo hreflang -l ko en -u https://example.com
+```
+
+#### AIO 종합 최적화
+
+```bash
+# 종합 분석
+dev-agent aio analyze https://example.com
+
+# 자동 최적화
+dev-agent aio optimize https://example.com
+
+# 리포트 생성
+dev-agent aio report -f markdown
+```
+
 #### 프로젝트 초기화
 
 ```bash
@@ -166,7 +242,11 @@ dev-agent-kit/
 │   │   ├── roles/            # Agent Role 모듈
 │   │   ├── lightning/        # Agent Lightning 모듈
 │   │   ├── claude-skills/    # Claude Skills 모듈
-│   │   └── agent-skills/     # Agent Skills 모듈
+│   │   ├── agent-skills/     # Agent Skills 모듈
+│   │   ├── seo/              # SEO 최적화 모듈
+│   │   ├── ai-seo/           # AI SEO 최적화 모듈
+│   │   ├── geo/              # GEO 최적화 모듈
+│   │   └── aio/              # AIO 종합 최적화 모듈
 │   ├── utils/                # 유틸리티 함수
 │   └── config/               # 설정 파일
 ├── bin/
@@ -178,7 +258,8 @@ dev-agent-kit/
 │   ├── USAGE.md              # 사용 가이드
 │   ├── ARCHITECTURE.md       # 아키텍처 문서
 │   ├── RECOMMENDED_PACKAGES.md # 추천 패키지
-│   └── INTEGRATION_GUIDE.md  # 통합 가이드
+│   ├── INTEGRATION_GUIDE.md  # 통합 가이드
+│   └── SEO_GUIDE.md          # SEO/AI SEO/GEO/AIO 가이드
 ├── .spec-kit/                # Spec-kit 문서 저장소
 ├── .project-data/            # 프로젝트 데이터
 │   ├── todos.json            # To-do 데이터
@@ -217,6 +298,7 @@ dev-agent-kit/
 - [아키텍처 문서](docs/ARCHITECTURE.md) - 시스템 구조 및 설계
 - [추천 패키지](docs/RECOMMENDED_PACKAGES.md) - 추가 패키지 추천
 - [통합 가이드](docs/INTEGRATION_GUIDE.md) - 도구 통합 방법
+- [SEO/AI SEO/GEO/AIO 가이드](docs/SEO_GUIDE.md) - 웹 최적화 가이드
 - [기여 가이드](CONTRIBUTING.md) - 프로젝트 기여 방법
 
 ## 개발 워크플로우 예시

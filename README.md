@@ -56,7 +56,17 @@
 - 키워드 밀도 및 가독성 분석
 - 경쟁사 키워드 분석
 
-### 9. GEO (Generative Engine Optimization) 최적화
+### 9. FastAPI 백엔드 서버
+- 최적화된 RESTful API 제공
+- 비동기 처리 및 성능 최적화
+- 자동 API 문서 생성 (Swagger/OpenAPI)
+
+### 10. API 키 토큰 최적화
+- 토큰 캐싱 및 재사용
+- 보안 암호화 저장
+- 사용량 추적 및 모니터링
+
+### 11. GEO (Generative Engine Optimization) 최적화
 - 생성형 AI 검색 엔진 최적화 (ChatGPT, Claude, Perplexity, Gemini 등)
 - AI 친화적인 콘텐츠 구조 분석
 - FAQ, HowTo, Article 스키마 생성
@@ -237,16 +247,50 @@ dev-agent aio report -f markdown
 dev-agent init
 ```
 
+#### FastAPI 서버
+
+```bash
+# FastAPI 의존성 설치
+dev-agent api:install
+
+# 서버 시작
+dev-agent api:start
+
+# 개발 모드 (자동 리로드)
+dev-agent api:start --reload --port 8080
+```
+
+#### API 키 관리
+
+```bash
+# API 키 저장
+dev-agent api-key set openai -k "sk-..."
+
+# API 키 목록 조회
+dev-agent api-key list
+
+# 사용량 통계
+dev-agent api-key stats
+
+# API 키 삭제
+dev-agent api-key delete openai
+```
+
 ## 프로젝트 구조
 
 ```
 dev-agent-kit/
+├── api/                      # FastAPI 백엔드 서버
+│   ├── main.py              # FastAPI 애플리케이션
+│   ├── requirements.txt     # Python 의존성
+│   └── .env.example         # 환경 변수 예시
 ├── src/
 │   ├── index.js              # 메인 진입점
 │   ├── modules/
 │   │   ├── spec-kit/         # Spec-kit 모듈
 │   │   ├── todo/             # To-do 관리 모듈
 │   │   ├── roles/            # Agent Role 모듈
+│   │   ├── api-key-manager/  # API 키 토큰 최적화 모듈
 │   │   ├── lightning/        # Agent Lightning 모듈
 │   │   ├── claude-skills/    # Claude Skills 모듈
 │   │   ├── agent-skills/     # Agent Skills 모듈

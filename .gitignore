@@ -17,3 +17,19 @@ training-data/
 *.pkl
 *.model
 
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+.venv
+
+# API Keys (추가 보안)
+api/.env
+api/*.env
+.project-data/api-keys/
+

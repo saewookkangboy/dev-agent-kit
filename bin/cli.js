@@ -413,6 +413,184 @@ aioCommand
     await aioModule.optimizeAEO(url);
   });
 
+// API 키 관리 명령어
+const apiKeyCommand = program.command('api-key');
+apiKeyCommand
+  .command('set')
+  .description('API 키 저장')
+  .argument('<provider>', 'API 공급자 (예: openai, claude, google)')
+  .option('-k, --key <key>', 'API 키')
+  .option('-e, --env <environment>', '환경 (default, production, development)', 'default')
+  .action(async (provider, options) => {
+    const { default: apiKeyManager } = await import('../src/modules/api-key-manager/index.js');
+    
+    let apiKey = options.key;
+    if (!apiKey) {
+      // 키를 입력받기 (보안을 위해 환경 변수나 파일에서 가져오기)
+      const readline = await import('readline');
+      const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
+      });
+      
+      apiKey = await new Promise((resolve) => {
+        rl.question('API 키를 입력하세요: ', (answer) => {
+          rl.close();
+          resolve(answer);
+        });
+      });
+    }
+    
+    await apiKeyManager.saveAPIKey(provider, apiKey, {
+      environment: options.env
+    });
+  });
+
+apiKeyCommand
+  .command('list')
+  .description('저장된 API 키 목록 조회')
+  .action(async () => {
+    const { default: apiKeyManager } = await import('../src/modules/api-key-manager/index.js');
+    const keys = await apiKeyManager.listAPIKeys();
+    
+    if (keys.length === 0) {
+      console.log(chalk.yellow('저장된 API 키가 없습니다.'));
+      return;
+    }
+    
+    console.log(chalk.bold.cyan('\n📋 저장된 API 키 목록:\n'));
+    keys.forEach(key => {
+      console.log(chalk.blue(`  ${key.provider}:`));
+      console.log(chalk.gray(`    환경: ${key.environment}`));
+      console.log(chalk.gray(`    생성일: ${key.createdAt}`));
+      console.log(chalk.gray(`    마지막 사용: ${key.lastUsed || '없음'}`));
+      console.log(chalk.gray(`    사용 횟수: ${key.usageCount}`));
+      if (key.hasExpired) {
+        console.log(chalk.red(`    상태: 만료됨`));
+      }
+      console.log();
+    });
+  });
+
+apiKeyCommand
+  .command('delete')
+  .description('API 키 삭제')
+  .argument('<provider>', 'API 공급자')
+  .action(async (provider) => {
+    const { default: apiKeyManager } = await import('../src/modules/api-key-manager/index.js');
+    await apiKeyManager.deleteAPIKey(provider);
+  });
+
+apiKeyCommand
+  .command('stats')
+  .description('API 키 사용량 통계')
+  .action(async () => {
+    const { default: apiKeyManager } = await import('../src/modules/api-key-manager/index.js');
+    apiKeyManager.printStats();
+  });
+
+apiKeyCommand
+  .command('clear-cache')
+  .description('API 키 캐시 초기화')
+  .action(async () => {
+    const { default: apiKeyManager } = await import('../src/modules/api-key-manager/index.js');
+    await apiKeyManager.clearAllCache();
+  });
+
+// FastAPI 서버 명령어
+program
+  .command('api:start')
+  .description('FastAPI 서버 시작')
+  .option('-p, --port <port>', '포트 번호', '8000')
+  .option('-h, --host <host>', '호스트 주소', '0.0.0.0')
+  .option('--reload', '자동 리로드 활성화', false)
+  .action(async (options) => {
+    const { spawn } = await import('child_process');
+    const path = await import('path');
+    const { fileURLToPath } = await import('url');
+    const { dirname } = await import('path');
+    
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = dirname(__filename);
+    const apiDir = path.join(__dirname, '..', 'api');
+    
+    console.log(chalk.blue.bold('\n🚀 FastAPI 서버 시작 중...\n'));
+    console.log(chalk.blue(`포트: ${options.port}`));
+    console.log(chalk.blue(`호스트: ${options.host}\n`));
+    
+    const pythonCommand = process.platform === 'win32' ? 'python' : 'python3';
+    
+    const uvicornArgs = [
+      '-m', 'uvicorn',
+      'main:app',
+      '--host', options.host,
+      '--port', options.port.toString()
+    ];
+    
+    if (options.reload) {
+      uvicornArgs.push('--reload');
+    }
+    
+    const serverProcess = spawn(pythonCommand, uvicornArgs, {
+      cwd: apiDir,
+      stdio: 'inherit',
+      shell: false
+    });
+    
+    serverProcess.on('error', (error) => {
+      console.error(chalk.red(`❌ 서버 시작 실패: ${error.message}`));
+      console.log(chalk.yellow('\n💡 Python 및 FastAPI가 설치되어 있는지 확인하세요:'));
+      console.log(chalk.gray('   pip install -r api/requirements.txt\n'));
+    });
+    
+    process.on('SIGINT', () => {
+      console.log(chalk.yellow('\n\n서버를 종료합니다...'));
+      serverProcess.kill();
+      process.exit();
+    });
+  });
+
+program
+  .command('api:install')
+  .description('FastAPI 의존성 설치')
+  .action(async () => {
+    const { spawn } = await import('child_process');
+    const path = await import('path');
+    const { fileURLToPath } = await import('url');
+    const { dirname } = await import('path');
+    
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = dirname(__filename);
+    const apiDir = path.join(__dirname, '..', 'api');
+    
+    console.log(chalk.blue.bold('\n📦 FastAPI 의존성 설치 중...\n'));
+    
+    const pipCommand = process.platform === 'win32' ? 'pip' : 'pip3';
+    
+    const installProcess = spawn(
+      pipCommand,
+      ['install', '-r', 'requirements.txt'],
+      {
+        cwd: apiDir,
+        stdio: 'inherit',
+        shell: false
+      }
+    );
+    
+    installProcess.on('error', (error) => {
+      console.error(chalk.red(`❌ 설치 실패: ${error.message}`));
+      console.log(chalk.yellow('\n💡 Python 및 pip가 설치되어 있는지 확인하세요.\n'));
+    });
+    
+    installProcess.on('close', (code) => {
+      if (code === 0) {
+        console.log(chalk.green('\n✅ 의존성 설치 완료!\n'));
+      } else {
+        console.error(chalk.red(`\n❌ 설치 실패 (종료 코드: ${code})\n`));
+      }
+    });
+  });
+
 // Init 명령어
 program
   .command('init')
